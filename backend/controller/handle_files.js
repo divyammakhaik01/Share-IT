@@ -4,9 +4,8 @@ const path = require('path')
 const File = require('../model/file')
 const {v4 : uuidv4} = require("uuid")
 const { resourceLimits } = require("worker_threads")
-// const file = require("../model/file")
-
-
+const sendMail = require("../services/mailServices")
+const mailTemplate = require("../services/mailTemplate")
 
 // config multer
 
@@ -33,18 +32,20 @@ let upload = multer({
 }).single('file')
 
 
-
+// upload file 
 const upload_file = (req,res) =>{
 
     upload(req , res , async (err)=>{
+        // 
         if(err){
             return res.status(500).json({
                 "status" : "false" , 
                 "error" : err.message
             })
-        }
+        }   
 
-
+        console.log(req.file);
+        
         const user_file =  await File.create({
             filename : req.file.filename , 
             id : uuidv4() , 
@@ -54,7 +55,7 @@ const upload_file = (req,res) =>{
  
         return res.json({
             "status" : "true" , 
-            "message" :  `${process.env.APP_BASE_URL}/files/${user_file.id}/}`
+            "message" :  `${process.env.APP_BASE_URL}/api/files/${user_file.id}/}`
         })
 
         
@@ -62,6 +63,7 @@ const upload_file = (req,res) =>{
 
 }
 
+// redirect to downlode page
 const downlode_page = async (req , res) => {
 
     try {
@@ -79,7 +81,7 @@ const downlode_page = async (req , res) => {
             id: file.id , 
             name : file.filename , 
             size : file.fileSize , 
-            download_link : `${process.env.APP_BASE_URL}/files/download/${file.id}`
+            download_link : `${process.env.APP_BASE_URL}/api/files/download/${file.id}`
         })
 
         
@@ -94,11 +96,10 @@ const downlode_page = async (req , res) => {
         //     "message" : error
         // })
     }
-
-
 }
 
 
+// download file 
 const downlode_file = async (req , res) =>{
     try {
         const file = await File.findOne({id : req.params.id})
@@ -119,8 +120,79 @@ const downlode_file = async (req , res) =>{
 }
 
 
+const send_Mail = async (req , res) =>{ 
+
+    const {id , MailTo , MailFrom} = req.body ;
+
+    // validation
+    
+    if(!id || !MailFrom  || !MailTo){
+        return res.status(422).json({
+            error : "All fields are required"
+        })
+    }
+
+    const file = await File.find({id: id});
+
+    console.log(":::::::::   " , file);
+
+    if(!file){
+        return res.json({
+            "error" : "File not found !!"
+        })
+    }
+
+    if(file.sender){
+        return res.json({
+            "error" : "mail already sent"
+        })
+    }
+
+    console.log("here");
+
+    const updated_file = await File.findByIdAndUpdate(file._id , {
+        sender : MailFrom , 
+        receiver : MailTo
+    } , {
+        new:true
+    })
+    
+    // file.sender = MailFrom ;
+    // file.receiver = MailTo ;
+
+    // const result = await file.save();
+    console.log(":  " , updated_file);
+
+    sendMail({
+        from : MailFrom , 
+        to : MailTo , 
+        subject : "Share-IT", 
+        text : `${MailFrom} send a file `,
+        html : mailTemplate({
+            from : MailFrom , 
+            downlodeLink : `${process.env.APP_BASE_URL}/api/files/download/${file.id}` , 
+            size : parseInt(file.fileSize/1000) + ' KB' , 
+            expire : "24 hours"
+        })
+    })
+
+
+    return res.json({
+        "status" :"true" ,
+        "message" : "mail sent successfully "
+    })
+
+
+    
+    
+
+}
+
+
+
 module.exports = {
     upload_file , 
     downlode_file ,
-    downlode_page
+    downlode_page , 
+    send_Mail
 }
