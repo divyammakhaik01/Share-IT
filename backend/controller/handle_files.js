@@ -17,6 +17,13 @@ let store = multer.diskStorage({
     filename : (req , file , cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
         const uniqueName  = `${uniqueSuffix}${path.extname(file.originalname)}`;
+
+        if(!file){
+            return res.json({
+                "status": "false",
+                "message" : "no file found "
+            })
+        }
         
         cb(null, uniqueName)
         
@@ -44,8 +51,13 @@ const upload_file = (req,res) =>{
             })
         }   
 
-        console.log(req.file);
-        
+        if(!req.file){
+            return res.json({
+                "status": "false",
+                "message" : "no file found "
+            })
+        }
+
         const user_file =  await File.create({
             filename : req.file.filename , 
             id : uuidv4() , 
@@ -76,6 +88,7 @@ const downlode_page = async (req , res) => {
                 error : "file not present"
             })   
         }
+
 
         return res.render('downlode_page' , {
             id: file.id , 
@@ -124,6 +137,15 @@ const send_Mail = async (req , res) =>{
 
     const {id , MailTo , MailFrom} = req.body ;
 
+    console.log(id , '      ' , MailFrom , '   ' , MailTo);
+
+    if(id === undefined || id === ''){
+        return res.json({
+            "status" :"false" , 
+            "message" : "id not found"
+        })
+    }
+    
     // validation
     
     if(!id || !MailFrom  || !MailTo){
@@ -131,6 +153,7 @@ const send_Mail = async (req , res) =>{
             error : "All fields are required"
         })
     }
+    console.log(id);
 
     const file = await File.find({id: id});
 
@@ -150,7 +173,7 @@ const send_Mail = async (req , res) =>{
 
     console.log("here");
 
-    const updated_file = await File.findByIdAndUpdate(file._id , {
+    const updated_file = await File.findByIdAndUpdate(file[0]._id , {
         sender : MailFrom , 
         receiver : MailTo
     } , {
@@ -170,8 +193,8 @@ const send_Mail = async (req , res) =>{
         text : `${MailFrom} send a file `,
         html : mailTemplate({
             from : MailFrom , 
-            downlodeLink : `${process.env.APP_BASE_URL}/api/files/download/${file.id}` , 
-            size : parseInt(file.fileSize/1000) + ' KB' , 
+            downlodeLink : `${process.env.APP_BASE_URL}/api/files/download/${file[0].id}` , 
+            size : parseInt(file[0].fileSize/1000) + ' KB' , 
             expire : "24 hours"
         })
     })

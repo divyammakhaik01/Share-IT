@@ -27,14 +27,6 @@ app.get('/' , (req , res) =>{
 app.use('/api/files', files)
 
 
-app.use('/' , (req,res)=>{
-    return res.json({
-        "status" : "true"
-    })
-})
-
-
-
 app.listen(PORT , () => {
     console.log(`server is runnnig at PORT ${PORT} `);
 })

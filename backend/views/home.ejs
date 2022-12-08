@@ -1,15 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share IT</title>
-</head>
-<body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      * {
+        margin: 0;
+        background-color: rgb(226, 192, 57);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex justify-center">
+      <!-- title -->
+      <div class="flex-col">
+        <h1
+          style="font-family: cursive"
+          class="header underline decoration-sky-500 font-bold text-6xl font-mono"
+        >
+          Share-IT
+        </h1>
 
-    <h1>HI</h1>
-    <!-- <h1>Share File</h1> -->
+        <div class="mt-32">
+
+          <!-- heading -->
+          
+          <h1
+            style="font-family: cursive"
+            class="underline decoration-pink-500 drop font-bold text-4xl font-sans flex"
+          >
+            Share File with anyone
+          </h1>
+
+          <!-- send mail -->
+          <div id="Mail" class="flex-col mt-8 border-x-4 border-indigo-500 px-4">
+            <h2
+              style="font-family: cursive"
+              class="flex justify-center font-bold "
+            >
+              SendMail
+            </h2>
+            <span>
+              <div class="font-bold">Mail To :</div>
+              <input
+                class="border border-sky-500"
+                style="font-family: cursive"
+                id="MailTo"
+                type="text"
+              />
+              <div class="font-bold">Mail From :</div>
+              <input
+                class="border border-sky-500"
+                style="font-family: cursive"
+                id="MailFrom"
+                type="text"
+              />
+              <div
+                class=" sendMail cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-red-500 rounded-md"
+                type="submit"
+              >
+                Send
+              </div>
+            </span>
+          </div>
+
+          <!-- upload file -->
+          <div class="mt-8">
+            <input
+              class="cursor-mt-4 cursor-pointer placeholder:italic placeholder:text-slate-400 block w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+              type="file"
+              name="file"
+              id="input_file"
+            />
+            <div
+              class="cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-indigo-500 rounded-md"
+              id="submit_file"
+            >
+              Upload
+            </div>
+          </div>
+
+             <!-- url -->
+       <div class="flex flex-wrap">
+        <input id="url" style="display: none;"class="w-96 cursor-pointer font-bold text-lg font-sans flex  justify-center mt-4 bg-black flex-wrap text-amber-100 rounded-md"
+        >
+        </input>
+      </div>
+             
+        </div>
+      </div>
     
-</body>
+    </div>
+
+    <!-- -------------------------------------------------------------------------------------------- -->
+
+    <script>
+      const submit_file = document.querySelector("#submit_file");
+      const input_file = document.querySelector("#input_file");
+
+      let MailTo = document.getElementById("MailTo");
+      let MailFrom = document.getElementById("MailFrom");
+      let url = document.getElementById("url");
+      let sendMail = document.getElementsByClassName("sendMail");
+      let path ;
+
+      sendMail[0].addEventListener("click", async (e) => {
+        console.log("> " , path);
+        e.preventDefault();
+
+        // send mail
+        fetch("http://localhost:8080/api/files/sendEmail", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: path,
+            MailTo: MailTo.value,
+            MailFrom: MailFrom.value,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if(data.message === "id not found"){
+              alert("first upload file !!!")
+            }
+            console.log(data);
+          })
+          .catch((error) => {
+            console.log("error : ", error);
+          });
+      });
+
+      submit_file.addEventListener("click", () => {
+        let file = input_file.files[0];
+
+        let formData = new FormData();
+
+        formData.append("file", file);
+        console.log("<>   ", file);
+
+        fetch(`http://localhost:8080/api/files`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            let msg = data.message;
+            if (msg == "no file found ") {
+              alert("No file entered !!");
+              return;
+            }
+            let update_msg = JSON.stringify(msg).slice(0, -3);
+            let final_url = update_msg.slice(1, update_msg.length);
+            path = final_url.split("files/")[1];
+            console.log(path);
+            console.log(final_url);
+            url.style.display = "flex";
+            url.value = final_url
+            
+            // window.location.href = final_url;
+          });
+        console.log("DONE");
+      });
+    </script>
+  </body>
 </html>

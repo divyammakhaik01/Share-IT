@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Download</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="flex justify-center">
+      <div class="flex-col">
+        <!-- heading -->
+        <h1 class="font-bold text-6xl " style="font-family: cursive;">Download Link</h1>
 
-    <div>
-        <h1>Download Link</h1>
 
+        <!--fileName-->
         
-        <div><%= name %></div>
-        <div><%= size %></div>
+        <div class="mt-56 ">
+          <div>
+            <span style="font-family: cursive;" class="underline decoration-sky-500 font-bold">Filename :</span> <%= name %> 
+          </div>
+        </div>
 
-        <a href="<%= download_link %>">CLick</a>
+        <!-- filesize -->
+
+        <div >
+          <span style="font-family: cursive;" class=" underline decoration-sky-500 font-bold">Filesize :</span> <%=  parseInt(size/1000)  %> KB
+        </div>
+        
+       
+        
+        <!-- downlode link -->
+        
+        <div class="font-bold">
+              <a class="cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-indigo-500 rounded-md" href="<%= download_link %>">click here to downlode</a>
+          </div>
+        </div>
+        
+      </div>
     </div>
-    
-    
-</body>
+
+  </body>
 </html>
