@@ -9,7 +9,7 @@
     <style>
       * {
         margin: 0;
-        background-color: rgb(226, 192, 57);
+        background-color: rgb(209 244 222);
       }
     </style>
   </head>
@@ -25,9 +25,7 @@
         </h1>
 
         <div class="mt-32">
-
           <!-- heading -->
-          
           <h1
             style="font-family: cursive"
             class="underline decoration-pink-500 drop font-bold text-4xl font-sans flex"
@@ -35,46 +33,25 @@
             Share File with anyone
           </h1>
 
-          <!-- send mail -->
-          <div id="Mail" class="flex-col mt-8 border-x-4 border-indigo-500 px-4">
-            <h2
-              style="font-family: cursive"
-              class="flex justify-center font-bold "
-            >
-              SendMail
-            </h2>
-            <span>
-              <div class="font-bold">Mail To :</div>
-              <input
-                class="border border-sky-500"
-                style="font-family: cursive"
-                id="MailTo"
-                type="text"
-              />
-              <div class="font-bold">Mail From :</div>
-              <input
-                class="border border-sky-500"
-                style="font-family: cursive"
-                id="MailFrom"
-                type="text"
-              />
-              <div
-                class=" sendMail cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-red-500 rounded-md"
-                type="submit"
-              >
-                Send
-              </div>
-            </span>
-          </div>
-
           <!-- upload file -->
           <div class="mt-8">
             <input
-              class="cursor-mt-4 cursor-pointer placeholder:italic placeholder:text-slate-400 block w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+              class="cursor-pointer block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 cursor-mt-4 placeholder:italic placeholder:text-slate-400 block w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
               type="file"
               name="file"
               id="input_file"
             />
+
+            <div
+              id="hide"
+              style="display: none"
+              class="text-white rounded cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-indigo-500 rounded-md"
+            >
+              <svg
+                class="bg-black animate-spin mt-1 md-1 h-4 w-4 mr-3 ..."
+              ></svg>
+              Processing...
+            </div>
             <div
               class="cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-indigo-500 rounded-md"
               id="submit_file"
@@ -82,33 +59,85 @@
               Upload
             </div>
           </div>
+        </div>
 
-             <!-- url -->
-       <div class="flex flex-wrap">
-        <input id="url" style="display: none;"class="w-96 cursor-pointer font-bold text-lg font-sans flex  justify-center mt-4 bg-black flex-wrap text-amber-100 rounded-md"
+        <!-- send mail -->
+        <div
+          style="display: none"
+          class="Mail drop-shadow-lg flex-col md-2 mt-8 border-4 px-4"
         >
-        </input>
-      </div>
-             
+          <h2
+            style="font-family: cursive"
+            class="flex justify-center font-bold"
+          >
+            Send Via Mail
+          </h2>
+          <span>
+            <div class="font-bold">To :</div>
+            <input
+              class="border border-sky-500 rounded"
+              style="font-family: cursive"
+              id="MailTo"
+              type="text"
+            />
+            <div class="font-bold">From :</div>
+            <input
+              class="border border-sky-500 rounded"
+              style="font-family: cursive"
+              id="MailFrom"
+              type="text"
+            />
+            <div
+              class="md-2 sendMail cursor-pointer font-bold text-lg font-sans flex justify-center mt-4 bg-red-500 rounded-md"
+              type="submit"
+            >
+              Send
+            </div>
+          </span>
+        </div>
+
+        <div style="display: none" class="mt-4 Mail flex justify-center">
+          <span class="flex font-bold">OR</span>
         </div>
       </div>
-    
+    </div>
+
+    <!-- url -->
+    <div class="flex justify-center flex-wrap">
+      <input style="display: none" id="url_copy" type="text" />
+      <div
+        id="url"
+        style="display: none"
+        class="cursor-pointer flex-wrap rounded px-2 py-2 flex mt-8 font-bold text-1xl underline decoration-amber-300 hover:bg-white bg-slate-300"
+      >
+        COPY LINK
+      </div>
     </div>
 
     <!-- -------------------------------------------------------------------------------------------- -->
 
     <script>
+      // -----------------------------------------------------------------------------------
       const submit_file = document.querySelector("#submit_file");
       const input_file = document.querySelector("#input_file");
-
       let MailTo = document.getElementById("MailTo");
       let MailFrom = document.getElementById("MailFrom");
+      let hide = document.getElementById("hide");
+      let Mail = document.getElementsByClassName("Mail");
       let url = document.getElementById("url");
+      let url_copy = document.getElementById("url_copy");
       let sendMail = document.getElementsByClassName("sendMail");
-      let path ;
+      let path;
+      // -----------------------------------------------------------------------------------
 
+      // copy text event 
+      url.addEventListener("click", () => {
+        navigator.clipboard.writeText(url_copy.value);
+      });
+
+      // send mail event
       sendMail[0].addEventListener("click", async (e) => {
-        console.log("> " , path);
+        console.log("> ", path);
         e.preventDefault();
 
         // send mail
@@ -126,8 +155,8 @@
         })
           .then((res) => res.json())
           .then((data) => {
-            if(data.message === "id not found"){
-              alert("first upload file !!!")
+            if (data.message === "id not found") {
+              alert("first upload file !!!");
             }
             console.log(data);
           })
@@ -136,7 +165,13 @@
           });
       });
 
+      // submit btn event
       submit_file.addEventListener("click", () => {
+        url.style.display = "none";
+        hide.style.display = "flex";
+        Mail[0].style.display = "none";
+        Mail[1].style.display = "none";
+        submit_file.style.display = "none";
         let file = input_file.files[0];
 
         let formData = new FormData();
@@ -163,8 +198,11 @@
             console.log(path);
             console.log(final_url);
             url.style.display = "flex";
-            url.value = final_url
-            
+            url_copy.value = final_url;
+            hide.style.display = "none";
+            submit_file.style.display = "flex";
+            Mail[0].style.display = "flex";
+            Mail[1].style.display = "flex";
             // window.location.href = final_url;
           });
         console.log("DONE");
