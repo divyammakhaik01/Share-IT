@@ -5,13 +5,14 @@ const app = express();
 const db = require('./config/db')()
 const files = require('./routes/file')
 const path = require('path')
+const cors = require('cors')
 
 const PORT = process.env.PORT ||  8080;
 
 app.use(express.static('public'))
 app.use(express.json())
 app.use(cors({
-    origin: `${APP_BASE_URL}`
+    origin: `${process.env.APP_BASE_URL}`
   }));
 
 // template
