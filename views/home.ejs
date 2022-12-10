@@ -141,7 +141,7 @@
         e.preventDefault();
 
         // send mail
-        fetch("http://localhost:8080/api/files/sendEmail", {
+        fetch("https://share-ke0i21rno-divyammakhaik01.vercel.app/api/files/sendEmail", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -179,7 +179,7 @@
         formData.append("file", file);
         console.log("<>   ", file);
 
-        fetch(`http://localhost:8080/api/files`, {
+        fetch(`https://share-ke0i21rno-divyammakhaik01.vercel.app/api/files`, {
           method: "POST",
           body: formData,
         })
