@@ -117,8 +117,6 @@
     <!-- -------------------------------------------------------------------------------------------- -->
 
     <script>
-      require("dotenv").config();
-      
       // -----------------------------------------------------------------------------------
       const submit_file = document.querySelector("#submit_file");
       const input_file = document.querySelector("#input_file");
@@ -141,9 +139,10 @@
       sendMail[0].addEventListener("click", async (e) => {
         console.log("> ", path);
         e.preventDefault();
+        var link= '<%= process.env.APP_BASE_URL %>';
 
         // send mail
-        fetch(`${APP_BASE_URL}/api/files/sendEmail`, {
+        fetch(`${link}/api/files/sendEmail`, {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -177,11 +176,13 @@
         let file = input_file.files[0];
 
         let formData = new FormData();
-
+        // console.log(`http://${link}/api/files`);
         formData.append("file", file);
         console.log("<>   ", file);
+        var link= '<%= process.env.APP_BASE_URL %>';
+        console.log(link);
 
-        fetch(`${APP_BASE_URL}/api/files`, {
+        fetch(`${link}/api/files`, {
           method: "POST",
           body: formData,
         })
