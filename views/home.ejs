@@ -142,7 +142,7 @@
         var link= '<%= process.env.APP_BASE_URL %>';
 
         // send mail
-        fetch(`${link}/api/files/sendEmail`, {
+        fetch(`http://${link}/api/files/sendEmail`, {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -182,7 +182,7 @@
         var link= '<%= process.env.APP_BASE_URL %>';
         console.log(link);
 
-        fetch(`${link}/api/files`, {
+        fetch(`http://${link}/api/files`, {
           method: "POST",
           body: formData,
         })

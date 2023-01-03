@@ -67,7 +67,7 @@ const upload_file = (req,res) =>{
  
         return res.json({
             "status" : "true" , 
-            "message" :  `${process.env.APP_BASE_URL}/api/files/${user_file.id}/}`
+            "message" :  `http://${process.env.APP_BASE_URL}/api/files/${user_file.id}/}`
         })
 
         
@@ -94,7 +94,7 @@ const downlode_page = async (req , res) => {
             id: file.id , 
             name : file.filename , 
             size : file.fileSize , 
-            download_link : `${process.env.APP_BASE_URL}/api/files/download/${file.id}`
+            download_link : `http://${process.env.APP_BASE_URL}/api/files/download/${file.id}`
         })
 
         
