@@ -1,6 +1,7 @@
 const db = require("../config/db")
 const multer = require("multer")
 const path = require('path')
+const fs = require('fs')
 const File = require('../model/file')
 const {v4 : uuidv4} = require("uuid")
 const { resourceLimits } = require("worker_threads")
@@ -12,6 +13,13 @@ const mailTemplate = require("../services/mailTemplate")
 let store = multer.diskStorage({
     destination : (req , file , cb)=>{
         // store files here  
+        let fs = require('fs');
+        let dir = './uploads';
+
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+        }
+
         cb(null , 'uploads/') 
     } , 
     filename : (req , file , cb) => {
@@ -67,7 +75,7 @@ const upload_file = (req,res) =>{
  
         return res.json({
             "status" : "true" , 
-            "message" :  `http://${process.env.APP_BASE_URL}/api/files/${user_file.id}/}`
+            "message" :  `${process.env.APP_BASE_URL}/api/files/${user_file.id}/}`
         })
 
         
@@ -94,7 +102,7 @@ const downlode_page = async (req , res) => {
             id: file.id , 
             name : file.filename , 
             size : file.fileSize , 
-            download_link : `http://${process.env.APP_BASE_URL}/api/files/download/${file.id}`
+            download_link : `${process.env.APP_BASE_URL}/api/files/download/${file.id}`
         })
 
         
