@@ -13,13 +13,6 @@ const mailTemplate = require("../services/mailTemplate")
 let store = multer.diskStorage({
     destination : (req , file , cb)=>{
         // store files here  
-        let fs = require('fs');
-        let dir = './uploads';
-
-        if (!fs.existsSync(dir)){
-            fs.mkdirSync(dir);
-        }
-
         cb(null , 'uploads/') 
     } , 
     filename : (req , file , cb) => {
