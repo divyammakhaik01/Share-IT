@@ -1,5 +1,5 @@
-module.exports = ({from, downlodeLink, size, expire}) => {
-    return `
+module.exports = ({ from, downlodeLink, size, expire }) => {
+  return `
         <!doctype html>
             <html>
             <head>
@@ -142,24 +142,6 @@ module.exports = ({from, downlodeLink, size, expire}) => {
                         <!-- END MAIN CONTENT AREA -->
                         </table>
             
-                        <!-- START FOOTER -->
-                        <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
-                        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                            <tr>
-                            <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                                <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Share-IT inc. main street 29, Moscow</span>
-                                <br> Want to share a file? <a href="http://localhost:3000" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">Share-IT</a>.
-                            </td>
-                            </tr>
-                            <tr>
-                            <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                                Powered by <a href="https://www.youtube.com/channel/UCo9xTRmg1SqQ5JSsA2fAgJw" style="color: #999999; font-size: 12px; text-align: center; text-decoration: none;">Coders Gyan</a>.
-                            </td>
-                            </tr>
-                        </table>
-                        </div>
-                        <!-- END FOOTER -->
-            
                     <!-- END CENTERED WHITE CONTAINER -->
                     </div>
                     </td>
@@ -169,4 +151,4 @@ module.exports = ({from, downlodeLink, size, expire}) => {
             </body>
         </html>
     `;
-}
+};
